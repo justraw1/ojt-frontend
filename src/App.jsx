@@ -1,17 +1,27 @@
-import { useState } from 'react'
-// import './App.css'
-import Login from './components/login'
-import Register from './components/Register'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import ProtectedRoute from './components/protected-route'
+import PublicRoute from './components/public-route'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import Documents from './pages/Documents'
 import NarrativeList from './data/narrative-table'
+import './App.css'
 
-function App() {
+export default function App() {
+  const routes = createBrowserRouter([
+    {
+      path: "/",
+      element: <PublicRoute><Login /></PublicRoute>
+    },
+    {
+      path: "/login",
+      element: <PublicRoute><Login /></PublicRoute>
+    },
+    {
+      path: "/home",
+      element: <ProtectedRoute><Documents /></ProtectedRoute>
+    }
+  ]);
 
-  return (
-    <>
-      <Login />
-    </>
-  )
+  return <RouterProvider router={ routes } />;
 }
-
-export default App
