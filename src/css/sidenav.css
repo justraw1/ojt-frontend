@@ -1,0 +1,26 @@
+.sidebar .nav-link {
+    color: #fff;
+    margin-bottom: 1rem;
+    width: 14vw;
+    margin-left: 1vw;
+}
+
+.sidebar {
+    height: 100dvh;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #22b145;
+    font-weight: bold;
+    color: #fff;
+    transition: all 0.5s ease;
+}
+
+.white-hr {
+    border: none;
+    border-top: 3px solid white;
+}
+
+.sidenav-background {
+    background: linear-gradient(to bottom, #22b145, #0a0a0a) !important;
+}

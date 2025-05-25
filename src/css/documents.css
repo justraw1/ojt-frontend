@@ -1,0 +1,15 @@
+.document-list {
+    background-color: #fff;
+    height: 100vh;
+    width: 85vw;
+}
+
+.document-list-page {
+    flex-direction: row;
+}
+
+@media (max-width: 768px) {
+    .document-list-page {
+        flex-direction: column !important;
+    }
+}

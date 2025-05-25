@@ -1,0 +1,11 @@
+.nav-tabs .nav-link {
+    color: #000;
+}
+
+.nav-tabs .nav-link:hover {
+    font-weight: bold;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+}
