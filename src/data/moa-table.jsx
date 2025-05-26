@@ -1,32 +1,43 @@
-import DataTable from "react-data-table-component";
-import { Button } from 'react-bootstrap';
+import DataTable from "react-data-table-component"
+import { Button } from 'react-bootstrap'
+import UploadModal from "../modals/upload-modal"
+import { useState } from "react"
 
 export default function MOAList() {
+    const [showUploadModal, setShowUploadModal] = useState("false");
     const columns = [
         {
             name: 'Document Name',
             selector: row => row.document,
             sortable: true,
-            width: '40%',
+            width: '35%',
         },
         {
-            name: 'Uploader',
+            name: 'Uploaded By',
             selector: row => row.name,
             sortable: false,
-            width: '30%',
+            width: '20%',
+        },
+        {
+            name: 'Uploaded At',
+            selector: row => row.name,
+            sortable: true,
+            width: '20%',
         },
         {
             name: 'Actions',
             cell: row => (
-                <div className="d-flex">
-                    <Button variant="info" className="me-2">Edit</Button>
-                    <Button variant="danger" className="ms-2">Delete</Button>
+                <div className="d-flex justify-content-evenly w-100">
+                    <Button variant="info" className="">Edit</Button>
+                    <Button variant="success">Open</Button>
+                    <Button>Download</Button>
+                    <Button variant="danger" className="">Delete</Button>
                 </div>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-            width: '30%',
+            width: '25%',
         }
     ];
 
@@ -51,6 +62,32 @@ export default function MOAList() {
             }
         }
     };
+
+    const formatDateTime = (dateString) => {
+        if (!dateString) {
+            return "N/A";
+        }
+    
+        // Convert to a Date object
+        const date = new Date(dateString);
+    
+        // Format the date with options
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: 'numeric', 
+            minute: 'numeric', 
+            hour12: true,
+            timeZone: 'Asia/Manila'
+        };
+    
+        return new Intl.DateTimeFormat('en-US', options).format(date);
+    };
+
+    const toggleUploadModal = () => {
+        setShowUploadModal(!showUploadModal);
+    }
 
     // Dummy data for demonstration (MOA documents)
     const data = [
@@ -80,7 +117,32 @@ export default function MOAList() {
                 pagination
                 highlightOnHover
                 pointerOnHover
-            />
+                noDataComponent="Currently Empty"
+                subHeader
+                subHeaderComponent={(
+                    <div className="d-flex column w-100 justify-content-between">
+                        <div></div>
+                        <div className="w-50">
+                            <input 
+                                type="search"
+                                className="form-control w-100 border-1 border-black"
+                                placeholder="Search"/>
+                        </div>
+
+                        <div>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => toggleUploadModal()}>
+                                    Upload File
+                            </button>
+                        </div>
+                    </div>
+                )} />
+
+                { showUploadModal && <UploadModal 
+                                        onClose={() => {
+                                            toggleUploadModal();
+                                        }}/>}
         </div>
     )
 
