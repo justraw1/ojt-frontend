@@ -1,9 +1,11 @@
 import { Modal, Button } from "react-bootstrap"
 import { useState } from "react"
+import { FilesManager } from "../components/files-manager";
 
 export default function UploadModal({ onClose }) {
     const [show, setShow] = useState(true);
     const [loader, setLoader] = useState("Upload");
+    const { upload } = FilesManager();
     const [state, setState] = useState({
         uploaded_by: localStorage.getItem("username"),
         file_name: "",
@@ -24,6 +26,28 @@ export default function UploadModal({ onClose }) {
         }));
     };
 
+    const handleFileChange = (event) => {
+        setState((prevState) => ({
+            ...prevState,
+            file_url: event.target.files[0]
+        }));
+    };
+
+    const handleUpload = async(event) => {
+        event.preventDefault();
+        setLoader("Uploading");
+
+        const formData = new FormData();
+        formData.append("file_name", state.file_name);
+        formData.append("file_url", state.file_url);
+        formData.append("document_type", state.document_type);
+        formData.append("uploaded_by", state.uploaded_by);
+
+        await upload(formData);
+        setLoader("Upload");
+        handleClose();
+    }
+
     return (
         <Modal
             show={ show }
@@ -36,7 +60,7 @@ export default function UploadModal({ onClose }) {
                 </Modal.Title>
             </Modal.Header>
 
-            <form>
+            <form onSubmit={ handleUpload }>
                 <Modal.Body>
                     <div>
                         <input 
@@ -45,20 +69,22 @@ export default function UploadModal({ onClose }) {
                             placeholder="Document Name"
                             className="form-control"
                             onChange={ handleChange }
+                            value={ state.file_name }
                             required/>
                         <input
                             type="file"
                             name="file_url"
                             placeholder="Choose a file"
                             className="form-control mt-3 file-upload-input"
-                            onChange={ handleChange }
+                            onChange={ handleFileChange }
                             required/>
                         <select
-                            name="file_type"
+                            name="document_type"
                             className="form-control mt-3"
                             onChange={ handleChange }
+                            value={ state.document_type }
                             required>
-                            <option disabled value="" selected>Select File Type</option>
+                            <option disabled value="" defaultValue>Select File Type</option>
                             <option value="MOA">MOA</option>
                             <option value="MOU">MOU</option>
                             <option value="Narrative">Narrative</option>

@@ -1,26 +1,31 @@
 import DataTable from "react-data-table-component"
 import { Button } from 'react-bootstrap'
 import UploadModal from "../modals/upload-modal"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { FilesManager } from "../components/files-manager"
 
-export default function MOAList() {
-    const [showUploadModal, setShowUploadModal] = useState("false");
+export default function MOAList({ onRefresh, documentFilter }) {
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const { fetch_documents } = FilesManager();
+    const [documents, setDocuments] = useState([]);
+
     const columns = [
         {
             name: 'Document Name',
-            selector: row => row.document,
-            sortable: true,
+            selector: row => row.file_name,
+            sortable: false,
             width: '35%',
         },
         {
             name: 'Uploaded By',
-            selector: row => row.name,
+            selector: row => row.uploaded_by,
             sortable: false,
             width: '20%',
         },
         {
             name: 'Uploaded At',
-            selector: row => row.name,
+            selector: row => formatDateTime(row.uploaded_at),
             sortable: true,
             width: '20%',
         },
@@ -89,31 +94,40 @@ export default function MOAList() {
         setShowUploadModal(!showUploadModal);
     }
 
-    // Dummy data for demonstration (MOA documents)
-    const data = [
-        {
-            id: 1,
-            document: "MOA_2024_001.pdf",
-            name: "admin_user",
-        },
-        {
-            id: 2,
-            document: "MOA_2024_002.pdf",
-            name: "staff_member",
-        },
-        {
-            id: 3,
-            document: "MOA_2024_003.pdf",
-            name: "coordinator",
-        }
-    ];
+    const fetchDocuments = async() => {
+        const documents = await fetch_documents();
+
+        const filteredDocuments = documentFilter ?
+            documents.filter(document => document.file_type === documentFilter) : data;
+        setDocuments(filteredDocuments);
+    }
+
+    const filteredDocuments = documents.filter(document => {
+        if(!searchText) return true;
+
+        const searchLower = searchText.toLowerCase();
+
+        const formattedDate = document.uploaded_at 
+        ? formatDateTime(document.uploaded_at).toLowerCase() 
+        : "";
+
+        return (
+            (document.file_name?.toLowerCase() || '').includes(searchLower) ||
+            (document.uploaded_by?.toLowerCase() || '').includes(searchLower) ||
+            formattedDate.includes(searchLower)
+        );
+    });
+
+    useEffect(() => {
+        fetchDocuments();
+    }, [onRefresh])
 
     return (
         <div className="logs-table">
             <DataTable
-                columns={columns}
-                data={data}
-                customStyles={customStyles}
+                columns={ columns }
+                data={ filteredDocuments }
+                customStyles={ customStyles }
                 pagination
                 highlightOnHover
                 pointerOnHover
@@ -125,6 +139,8 @@ export default function MOAList() {
                         <div className="w-50">
                             <input 
                                 type="search"
+                                value={ searchText }
+                                onChange={e => setSearchText(e.target.value)}
                                 className="form-control w-100 border-1 border-black"
                                 placeholder="Search"/>
                         </div>

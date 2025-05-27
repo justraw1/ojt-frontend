@@ -1,23 +1,27 @@
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab'
+import Tabs from 'react-bootstrap/Tabs'
 import Sidenav from "../templates/Sidenav"
 import NarrativeList from "../data/narrative-table"
 import MOAList from '../data/moa-table'
-import MOUList from '../data/mou-table';
+import MOUList from '../data/mou-table'
+import { ToastContainer } from 'react-toastify'
+import { useState } from "react"
 
 export default function Documents() {
+    const [activeTab, setActiveTab] = useState('MOA');
     return (
         <div className="d-flex document-list-page">
+            <ToastContainer />
             <Sidenav />
             <div className="document-list">
-                <Tabs defaultActiveKey="narrative" fill>
-                    <Tab eventKey="moa" title="MOA">
-                        <MOAList />
+                <Tabs defaultActiveKey="MOA" onSelect={(key) => setActiveTab(key)} fill>
+                    <Tab eventKey="MOA" title="MOA">
+                        <MOAList documentFilter={ activeTab }/>
                     </Tab>
-                    <Tab eventKey="mou" title="MOU">
+                    <Tab eventKey="MOU" title="MOU">
                         <MOUList />
                     </Tab>
-                    <Tab eventKey="narrative" title="Narrative">
+                    <Tab eventKey="Narrative" title="Narrative">
                         <NarrativeList />
                     </Tab>
                 </Tabs>
