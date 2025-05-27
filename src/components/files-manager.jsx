@@ -19,5 +19,16 @@ export const FilesManager = () => {
         const response = await backend_api.get("/fetch-documents");
         return response.data.documents;
     }
-    return { upload, fetch_documents };
+
+    const delete_document = async(id) => {
+        await backend_api.post("/delete-document", {
+            id,
+        }).then(response => {
+            if (response.data.status === "success") {
+                toast_success("Document has been deleted");
+            }
+        })
+    }
+
+    return { upload, fetch_documents, delete_document };
 }

@@ -3,11 +3,14 @@ import { Button } from 'react-bootstrap'
 import UploadModal from "../modals/upload-modal"
 import { useEffect, useState } from "react"
 import { FilesManager } from "../components/files-manager"
+import DeleteModal from "../modals/delete-modal"
 
 export default function MOAList({ onRefresh, documentFilter }) {
     const [showUploadModal, setShowUploadModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState(null);
     const [searchText, setSearchText] = useState("");
-    const { fetch_documents } = FilesManager();
+    const { fetch_documents, delete_document } = FilesManager();
     const [documents, setDocuments] = useState([]);
 
     const columns = [
@@ -34,9 +37,14 @@ export default function MOAList({ onRefresh, documentFilter }) {
             cell: row => (
                 <div className="d-flex justify-content-evenly w-100">
                     <Button variant="info" className="">Edit</Button>
-                    <Button variant="success">Open</Button>
-                    <Button>Download</Button>
-                    <Button variant="danger" className="">Delete</Button>
+                    <Button variant="success" 
+                            onClick={() => {
+                                const fileUrl = `http://localhost:8000/storage/${ row.file_url }`;
+                                const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+                                window.open(officeViewerUrl, "_blank");
+                            }}>Open</Button>
+                    <Button onClick={() => window.open(`http://localhost:8000/storage/${ row.file_url }`, "_blank")}>Download</Button>
+                    <Button variant="danger" onClick={() => toggleDeleteModal(row.id)}>Delete</Button>
                 </div>
             ),
             ignoreRowClick: true,
@@ -92,6 +100,11 @@ export default function MOAList({ onRefresh, documentFilter }) {
 
     const toggleUploadModal = () => {
         setShowUploadModal(!showUploadModal);
+    }
+
+    const toggleDeleteModal = (id) => {
+        setSelectedDocument(id);
+        setShowDeleteModal(!showDeleteModal);
     }
 
     const fetchDocuments = async() => {
@@ -158,6 +171,16 @@ export default function MOAList({ onRefresh, documentFilter }) {
                 { showUploadModal && <UploadModal 
                                         onClose={() => {
                                             toggleUploadModal();
+                                            fetchDocuments();
+                                        }}/>}
+
+                { showDeleteModal && <DeleteModal 
+                                        onClose={() => setShowDeleteModal() }
+                                        onDelete={ async() => {
+                                            setShowDeleteModal(true);
+                                            await delete_document(selectedDocument);
+                                            fetchDocuments();
+                                            setShowDeleteModal(false);
                                         }}/>}
         </div>
     )
