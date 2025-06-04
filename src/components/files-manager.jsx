@@ -30,5 +30,20 @@ export const FilesManager = () => {
         })
     }
 
-    return { upload, fetch_documents, delete_document };
+    const fetch_document_info = async(file_id) => {
+        const response = await backend_api.get(`/fetch-document-info/${ file_id }`);
+        return response.data.document_info;
+    }
+
+    const update_document = async(file_id, file_name, file_type) => {
+        const response = await backend_api.post("/update-document", {
+            file_id, file_name, file_type,
+        });
+
+        if (response.data.status === "success") {
+            toast_success("Document has been updated");
+        }
+    }
+
+    return { upload, fetch_documents, delete_document, fetch_document_info, update_document };
 }

@@ -24,9 +24,9 @@ export default function Sidenav() {
                     <h3 className="navbar-logo fw-bold text-white text-center pt-3">IAELO</h3>
                     <br />
                     <Nav defaultActiveKey="#" className="flex-column">
-                        <Nav.Link href="#" className="rounded-start nav-button">Dashboard</Nav.Link>
-                        <Nav.Link href="#" className="rounded-start nav-button">Documents</Nav.Link>
-                        <Nav.Link href="#" className="rounded-start nav-button">Pending Submissions</Nav.Link>
+                        <Nav.Link href="/dashboard" className="rounded-start nav-button">Dashboard</Nav.Link>
+                        <Nav.Link href="/documents" className="rounded-start nav-button">Documents</Nav.Link>
+                        <Nav.Link href="/pending" className="rounded-start nav-button">Pending Submissions</Nav.Link>
                     </Nav>
                     <Button
                         type='submit'

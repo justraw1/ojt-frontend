@@ -33,7 +33,7 @@ export default function DocumentList() {
     const customStyles = {
         table: {
             style: {
-                height: '80vh',
+                height: '65vh',
             }
         },
         headCells: {
@@ -70,13 +70,13 @@ export default function DocumentList() {
     return (
         <div className="d-flex flex-column align-items-center mt-4">
             <div className="d-flex mb-4">
-                <div className="card me-3" style={{ width: '18rem', height: '10rem' }}>
+                <div className="card me-3" style={{ width: '48rem', height: '10rem' }}>
                     <h5 className="card-title text-center mt-2">Total Documents</h5>
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
                         <p className="card-text text-center">{data.length}</p>
                     </div>
                 </div>
-                <div className="card" style={{ width: '18rem', height: '10rem' }}>
+                <div className="card" style={{ width: '48rem', height: '10rem' }}>
                     <h5 className="card-title text-center mt-2">Pending Documents</h5>
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
                         <p className="card-text text-center">0</p>

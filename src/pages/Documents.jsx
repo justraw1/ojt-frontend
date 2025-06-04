@@ -14,12 +14,12 @@ export default function Documents() {
             <ToastContainer />
             <Sidenav />
             <div className="document-list">
-                <Tabs defaultActiveKey="MOA" onSelect={(key) => setActiveTab(key)} fill>
+                <Tabs activeKey={ activeTab } onSelect={(key) => setActiveTab(key)} fill>
                     <Tab eventKey="MOA" title="MOA">
-                        <MOAList documentFilter={ activeTab }/>
+                        {activeTab === 'MOA' && <MOAList documentFilter={ activeTab } />}
                     </Tab>
                     <Tab eventKey="MOU" title="MOU">
-                        <MOUList />
+                        {activeTab === 'MOU' && <MOUList documentFilter={ activeTab } />}
                     </Tab>
                     <Tab eventKey="Narrative" title="Narrative">
                         <NarrativeList />

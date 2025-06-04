@@ -197,7 +197,11 @@ export default function MOAList({ onRefresh, documentFilter }) {
                                         }}/>}
                 
                 { showEditModal && <EditModal
-                                        onClose={() => setShowEditModal() }/>}
+                                        onClose={() => {
+                                            setShowEditModal();
+                                            fetchDocuments();
+                                        }}
+                                        file_id={ selectedDocument }/>}
         </div>
     )
 
