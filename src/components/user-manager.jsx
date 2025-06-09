@@ -48,5 +48,17 @@ export const UserManager = () => {
         })
     }
 
-    return { login, logout };
+    const register = async(username, email, password) => {
+        await backend_api.post("register", {
+            username,
+            email,
+            password,
+        }).then(response => {
+            if (response.data.status === "success") {
+                toast_success("The Account has been created successfully");
+            }
+        })
+    }
+
+    return { login, logout, register };
 }

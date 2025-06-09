@@ -45,5 +45,12 @@ export const FilesManager = () => {
         }
     }
 
-    return { upload, fetch_documents, delete_document, fetch_document_info, update_document };
+    const fetch_pending_count = async() => {
+        const response = await backend_api.get("/fetch-pending-count");
+        return response.data.pending_count;
+    }
+
+    return { upload, fetch_documents, 
+             delete_document, fetch_document_info, 
+             update_document, fetch_pending_count };
 }

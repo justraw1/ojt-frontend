@@ -12,8 +12,9 @@ export default function DocumentList({ onRefresh }) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
     const [searchText, setSearchText] = useState("");
-    const { fetch_documents, delete_document } = FilesManager();
+    const { fetch_documents, delete_document, fetch_pending_count } = FilesManager();
     const [documents, setDocuments] = useState([]);
+    const [pendingCount, setPendingCount] = useState("");
 
     const columns = [
         {
@@ -131,6 +132,11 @@ export default function DocumentList({ onRefresh }) {
         setDocuments(documents);
     }
 
+    const fetchPendingCount = async() => {
+        const count = await fetch_pending_count();
+        setPendingCount(count);
+    }
+
     const filteredDocuments = documents.filter(document => {
         if(!searchText) return true;
 
@@ -149,6 +155,7 @@ export default function DocumentList({ onRefresh }) {
 
     useEffect(() => {
         fetchDocuments();
+        fetchPendingCount();
     }, [onRefresh])
 
     return (
@@ -157,13 +164,13 @@ export default function DocumentList({ onRefresh }) {
                 <div className="card me-3" style={{ width: '35rem', height: '10rem' }}>
                     <h5 className="card-title text-center mt-2">Total Documents</h5>
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
-                        <p className="card-text text-center">{filteredDocuments.length}</p>
+                        <p className="card-text text-center">{ filteredDocuments.length }</p>
                     </div>
                 </div>
                 <div className="card" style={{ width: '35rem', height: '10rem' }}>
                     <h5 className="card-title text-center mt-2">Pending Documents</h5>
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
-                        <p className="card-text text-center">0</p>
+                        <p className="card-text text-center">{ pendingCount }</p>
                     </div>
                 </div>
             </div>
