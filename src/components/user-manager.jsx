@@ -19,7 +19,7 @@ export const UserManager = () => {
                 localStorage.setItem("user_type", response.data.user_type);
                 localStorage.setItem("user_id", response.data.user_id);
 
-                navigate("/home");
+                navigate("/dashboard");
             } else {
                 toast_fail(response.data.message);
             }

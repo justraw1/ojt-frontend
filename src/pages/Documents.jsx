@@ -22,7 +22,7 @@ export default function Documents() {
                         {activeTab === 'MOU' && <MOUList documentFilter={ activeTab } />}
                     </Tab>
                     <Tab eventKey="Narrative" title="Narrative">
-                        <NarrativeList />
+                        {activeTab === 'Narrative' && <NarrativeList documentFilter={ activeTab} />}
                     </Tab>
                 </Tabs>
             </div>

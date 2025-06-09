@@ -19,6 +19,10 @@ export default function App() {
       element: <PublicRoute><Login /></PublicRoute>
     },
     {
+      path: "/register",
+      element: <PublicRoute><Register /></PublicRoute>
+    },
+    {
       path: "/documents",
       element: <ProtectedRoute><Documents /></ProtectedRoute>
     },

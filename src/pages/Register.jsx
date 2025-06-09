@@ -14,6 +14,7 @@ export default function Register() {
                         <div className="mb-3">
                             <input type="password" className="form-control" placeholder="Password" />
                         </div>
+                        <div className="text-center">Already have an account?? <a href="/login">Login Now</a></div>
                         <div className="mt-5">
                             <button type="submit" className="btn btn-primary w-100">Register</button>
                         </div>

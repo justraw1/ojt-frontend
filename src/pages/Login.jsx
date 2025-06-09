@@ -58,6 +58,10 @@ export default function Login() {
                                    onChange={ handleChange }
                                    required />
                         </div>
+                        <div className="text-center">
+                            <p>No Account?? <a href="/register">Register Here</a></p>
+
+                        </div>
                         <div className="mt-5">
                             <button 
                                 type="submit" 
