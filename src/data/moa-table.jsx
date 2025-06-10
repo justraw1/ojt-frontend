@@ -124,7 +124,7 @@ export default function MOAList({ onRefresh, documentFilter }) {
         const documents = await fetch_documents();
 
         const filteredDocuments = documentFilter ?
-            documents.filter(document => document.file_type === documentFilter) : data;
+            documents.filter(document => (document.file_type === documentFilter) && (document.status !== "Pending")) : data;
         setDocuments(filteredDocuments);
     }
 

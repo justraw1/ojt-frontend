@@ -30,6 +30,16 @@ export const FilesManager = () => {
         })
     }
 
+    const accept_document = async(id) => {
+        await backend_api.post("/accept-document", {
+            id,
+        }).then(response => {
+            if (response.data.status === "success") {
+                toast_success("Document has been approved");
+            }
+        })
+    }
+
     const fetch_document_info = async(file_id) => {
         const response = await backend_api.get(`/fetch-document-info/${ file_id }`);
         return response.data.document_info;
@@ -50,7 +60,13 @@ export const FilesManager = () => {
         return response.data.pending_count;
     }
 
+    const fetch_pending_documents = async() => {
+        const response = await backend_api.get("/fetch-pending-documents");
+        return response.data.documentList;
+    }
+
     return { upload, fetch_documents, 
              delete_document, fetch_document_info, 
-             update_document, fetch_pending_count };
+             update_document, fetch_pending_count,
+             fetch_pending_documents, accept_document};
 }

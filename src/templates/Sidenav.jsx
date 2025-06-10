@@ -6,6 +6,7 @@ import { UserManager } from '../components/user-manager'
 export default function Sidenav() {
     const [loader, setLoader] = useState("Logout");
     const token = localStorage.getItem('token');
+    const user_type = localStorage.getItem('user_type');
     const { logout } = UserManager();
 
     //Function for Logout event
@@ -26,7 +27,7 @@ export default function Sidenav() {
                     <Nav defaultActiveKey="#" className="flex-column">
                         <Nav.Link href="/dashboard" className="rounded-start nav-button">Dashboard</Nav.Link>
                         <Nav.Link href="/documents" className="rounded-start nav-button">Documents</Nav.Link>
-                        <Nav.Link href="/pending" className="rounded-start nav-button">Pending Submissions</Nav.Link>
+                        { (user_type === "Admin") && <Nav.Link href="/pending" className="rounded-start nav-button">Pending Submissions</Nav.Link> }
                     </Nav>
                     <Button
                         type='submit'

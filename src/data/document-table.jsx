@@ -129,7 +129,8 @@ export default function DocumentList({ onRefresh }) {
 
     const fetchDocuments = async() => {
         const documents = await fetch_documents();
-        setDocuments(documents);
+        const filteredDocuments = documents.filter(document => document.status !== "Pending");
+        setDocuments(filteredDocuments);
     }
 
     const fetchPendingCount = async() => {
@@ -211,6 +212,7 @@ export default function DocumentList({ onRefresh }) {
                                         onClose={() => {
                                             toggleUploadModal();
                                             fetchDocuments();
+                                            fetchPendingCount();
                                         }}/>}
 
                 { showDeleteModal && <DeleteModal 
@@ -219,6 +221,7 @@ export default function DocumentList({ onRefresh }) {
                                             setShowDeleteModal(true);
                                             await delete_document(selectedDocument);
                                             fetchDocuments();
+                                            fetchPendingCount();
                                             setShowDeleteModal(false);
                                         }}/>}
                 

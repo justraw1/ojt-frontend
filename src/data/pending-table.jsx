@@ -1,25 +1,55 @@
 import DataTable from "react-data-table-component";
 import { Button } from 'react-bootstrap';
+import { FilesManager } from "../components/files-manager"
+import { useEffect, useState } from "react"
 
-export default function PendingList() {
+export default function PendingList({ onRefresh }) {
+    const [searchText, setSearchText] = useState("");
+    const { fetch_pending_documents, accept_document } = FilesManager();
+    const [documents, setDocuments] = useState([]);
+    const [loader, setLoader] = useState("Accept")
+
     const columns = [
         {
             name: 'Document Name',
-            selector: row => row.document,
+            selector: row => row.file_name,
             sortable: true,
-            width: '40%',
+            width: '20%',
         },
         {
             name: 'Uploaded By',
-            selector: row => row.name,
+            selector: row => row.uploaded_by,
             sortable: false,
-            width: '30%',
+            width: '20%',
+        },
+        {
+            name: 'Document Type',
+            selector: row => row.file_type,
+            sortable: false,
+            width: '15%',
+        },
+        {
+            name: 'Uploaded At',
+            selector: row => formatDateTime(row.uploaded_at),
+            sortable: true,
+            width: '15%',
         },
         {
             name: 'Actions',
             cell: row => (
                 <div className="d-flex">
-                    <Button variant="info" className="me-2">View</Button>
+                    <Button variant="info"
+                            className="me-2" 
+                            onClick={() => {
+                                const fileUrl = `http://localhost:8000/storage/${ row.file_url }`;
+                                const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+                                const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(`http://localhost:8000/storage/${row.file_url}`)}&embedded=true`;
+                                window.open(fileUrl, "_blank");
+                            }}>Open</Button>
+                    <Button variant="success" 
+                            className="me-2"
+                            onClick={() => handleAccept(row.id)}>{ loader }</Button>
+                    <Button variant="danger" className="">Reject</Button>
                 </div>
             ),
             ignoreRowClick: true,
@@ -32,7 +62,7 @@ export default function PendingList() {
     const customStyles = {
         table: {
             style: {
-                height: '80vh',
+                height: '75vh',
             }
         },
         headCells: {
@@ -51,45 +81,83 @@ export default function PendingList() {
         }
     };
 
-    // Dummy data for demonstration
-    const data = [
-        {
-            id: 1,
-            document: "MOA_2024_001.pdf",
-            name: "admin_user",
-        },
-        {
-            id: 2,
-            document: "MOU_2024_002.pdf",
-            name: "staff_member",
-        },
-        {
-            id: 3,
-            document: "Narrative_2024_003.pdf",
-            name: "coordinator",
-        },
-        {
-            id: 2,
-            document: "MOU_2024_002.pdf",
-            name: "staff_member",
-        },
-        {
-            id: 3,
-            document: "Narrative_2024_003.pdf",
-            name: "coordinator",
+    const formatDateTime = (dateString) => {
+        if (!dateString) {
+            return "N/A";
         }
-    ];
+    
+        // Convert to a Date object
+        const date = new Date(dateString);
+    
+        // Format the date with options
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: 'numeric', 
+            minute: 'numeric', 
+            hour12: true,
+            timeZone: 'Asia/Manila'
+        };
+    
+        return new Intl.DateTimeFormat('en-US', options).format(date);
+    };
+
+    const fetchDocuments = async() => {
+        const documents = await fetch_pending_documents();
+        setDocuments(documents);
+    }
+
+    const filteredDocuments = documents.filter(document => {
+        if(!searchText) return true;
+
+        const searchLower = searchText.toLowerCase();
+
+        const formattedDate = document.uploaded_at 
+        ? formatDateTime(document.uploaded_at).toLowerCase() 
+        : "";
+
+        return (
+            (document.file_name?.toLowerCase() || '').includes(searchLower) ||
+            (document.uploaded_by?.toLowerCase() || '').includes(searchLower) ||
+            formattedDate.includes(searchLower)
+        );
+    });
+
+    const handleAccept = async(id) => {
+        setLoader("Accepting...");
+        await accept_document(id);
+        fetchDocuments();
+        setLoader("Accept");
+    }
+
+    useEffect(() => {
+        fetchDocuments();
+    }, [onRefresh])
 
     return (
         <div className="logs-table">
-            <DataTable
-                columns={columns}
-                data={data}
-                customStyles={customStyles}
-                pagination
-                highlightOnHover
-                pointerOnHover
-            />
+                <DataTable
+                    title="Pending Documents"
+                    columns={ columns }
+                    data={ filteredDocuments }
+                    customStyles={ customStyles }
+                    pagination
+                    highlightOnHover
+                    pointerOnHover
+                subHeader
+                subHeaderComponent={(
+                    <div className="d-flex column w-100 justify-content-center">
+                        <div className="w-50">
+                            <input 
+                                type="search"
+                                value={ searchText }
+                                onChange={e => setSearchText(e.target.value)}
+                                className="form-control w-100 border-1 border-black"
+                                placeholder="Search"/>
+                        </div>
+                    </div>
+                )} />
         </div>
     )
 }
