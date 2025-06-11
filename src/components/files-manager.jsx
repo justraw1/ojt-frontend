@@ -40,6 +40,16 @@ export const FilesManager = () => {
         })
     }
 
+    const reject_document = async(id) => {
+        await backend_api.post("/reject-document", {
+            id,
+        }).then(response => {
+            if (response.data.status === "success") {
+                toast_success("Document has been rejected");
+            }
+        })
+    }
+
     const fetch_document_info = async(file_id) => {
         const response = await backend_api.get(`/fetch-document-info/${ file_id }`);
         return response.data.document_info;
@@ -68,5 +78,6 @@ export const FilesManager = () => {
     return { upload, fetch_documents, 
              delete_document, fetch_document_info, 
              update_document, fetch_pending_count,
-             fetch_pending_documents, accept_document};
+             fetch_pending_documents, accept_document,
+             reject_document };
 }

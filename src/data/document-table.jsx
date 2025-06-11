@@ -15,6 +15,7 @@ export default function DocumentList({ onRefresh }) {
     const { fetch_documents, delete_document, fetch_pending_count } = FilesManager();
     const [documents, setDocuments] = useState([]);
     const [pendingCount, setPendingCount] = useState("");
+    const user = localStorage.getItem("username");
 
     const columns = [
         {
@@ -24,8 +25,8 @@ export default function DocumentList({ onRefresh }) {
             width: '25%',
         },
         {
-            name: 'Uploaded By',
-            selector: row => row.uploaded_by,
+            name: 'Status',
+            selector: row => row.status,
             sortable: false,
             width: '15%',
         },
@@ -129,7 +130,7 @@ export default function DocumentList({ onRefresh }) {
 
     const fetchDocuments = async() => {
         const documents = await fetch_documents();
-        const filteredDocuments = documents.filter(document => document.status !== "Pending");
+        const filteredDocuments = documents.filter(document => document.uploaded_by === user);
         setDocuments(filteredDocuments);
     }
 

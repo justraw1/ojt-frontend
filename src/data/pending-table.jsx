@@ -5,9 +5,10 @@ import { useEffect, useState } from "react"
 
 export default function PendingList({ onRefresh }) {
     const [searchText, setSearchText] = useState("");
-    const { fetch_pending_documents, accept_document } = FilesManager();
+    const { fetch_pending_documents, accept_document, reject_document } = FilesManager();
     const [documents, setDocuments] = useState([]);
-    const [loader, setLoader] = useState("Accept")
+    const [loader, setLoader] = useState("Accept");
+    const [loader2, setLoader2] = useState("Reject");
 
     const columns = [
         {
@@ -49,7 +50,8 @@ export default function PendingList({ onRefresh }) {
                     <Button variant="success" 
                             className="me-2"
                             onClick={() => handleAccept(row.id)}>{ loader }</Button>
-                    <Button variant="danger" className="">Reject</Button>
+                    <Button variant="danger"
+                            onClick={() => handleReject(row.id)}>{ loader2 }</Button>
                 </div>
             ),
             ignoreRowClick: true,
@@ -129,6 +131,13 @@ export default function PendingList({ onRefresh }) {
         await accept_document(id);
         fetchDocuments();
         setLoader("Accept");
+    }
+
+    const handleReject = async(id) => {
+        setLoader2("Rejecting...");
+        await reject_document(id);
+        fetchDocuments();
+        setLoader2("Reject");
     }
 
     useEffect(() => {
