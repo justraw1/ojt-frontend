@@ -4,6 +4,7 @@ import Sidenav from "../templates/Sidenav"
 import NarrativeList from "../data/narrative-table"
 import MOAList from '../data/moa-table'
 import MOUList from '../data/mou-table'
+import ReEntryList from '../data/re-entry-table'
 import { ToastContainer } from 'react-toastify'
 import { useState } from "react"
 
@@ -14,15 +15,18 @@ export default function Documents() {
             <ToastContainer />
             <Sidenav />
             <div className="document-list">
-                <Tabs defaultActiveKey="MOA" onSelect={(key) => setActiveTab(key)} fill>
+                <Tabs activeKey={activeTab} onSelect={(key) => setActiveTab(key)} fill>
                     <Tab eventKey="MOA" title="MOA">
-                        <MOAList documentFilter={ activeTab }/>
+                        <MOAList documentFilter={activeTab} />
                     </Tab>
                     <Tab eventKey="MOU" title="MOU">
-                        <MOUList />
+                        {activeTab === 'MOU' && <MOUList documentFilter={activeTab} />}
                     </Tab>
                     <Tab eventKey="Narrative" title="Narrative">
-                        <NarrativeList />
+                        {activeTab === 'Narrative' && <NarrativeList documentFilter={activeTab} />}
+                    </Tab>
+                    <Tab eventKey="ReEntry" title="Re-Entry">
+                        {activeTab === 'ReEntry' && <ReEntryList documentFilter={activeTab} />}
                     </Tab>
                 </Tabs>
             </div>
