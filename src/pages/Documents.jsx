@@ -23,6 +23,12 @@ export default function Documents() {
                     </Tab>
                     <Tab eventKey="Narrative" title="Narrative">
                         {activeTab === 'Narrative' && <NarrativeList documentFilter={ activeTab} />}
+<<<<<<< Updated upstream
+=======
+                    </Tab>
+                    <Tab eventKey="Re-Entry" title="Re-Entry">
+                        {activeTab === 'Re-Entry' && <ReEntryList documentFilter={ activeTab } />}
+>>>>>>> Stashed changes
                     </Tab>
                 </Tabs>
             </div>

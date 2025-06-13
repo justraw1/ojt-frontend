@@ -88,6 +88,7 @@ export default function UploadModal({ onClose }) {
                             <option value="MOA">MOA</option>
                             <option value="MOU">MOU</option>
                             <option value="Narrative">Narrative</option>
+                            <option value="Re-Entry">Re-Entry</option>
                         </select>
                     </div>
                 </Modal.Body>
